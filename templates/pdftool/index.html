@@ -1,0 +1,86 @@
+{% extends 'pdftool/layout.html' %}
+
+{% block body %}
+
+<!-- display error message if no files are uploaded -->
+{% if messages %}
+  <div class="container m-3 mx-auto">
+    {% for message in messages %}
+    <div class="error-msg">{{ message }}</div>
+  </div>
+    {% endfor %}
+  </div>
+{% endif %}
+
+<main class="container mt-3">
+    <div class="row">
+    <!-- logo header area -->
+    <section id="logo-area" class="col-lg-6">
+        <img id="pdf-logo" src="static/pdftool/pdf-logo.png" alt="Pdf logo" class="img-fluid mx-auto d-block">
+    </section>
+
+    <!-- choose upload method -->
+    <section id="upload-area" class="col-lg-6 my-auto">
+        <div class="container-fluid">
+        <button id="upload-camera-btn" class="choose-btn">Upload from Camera</button>
+        <button id="upload-files-btn" class="choose-btn">Select files</button>
+        </div>
+    </section>
+
+    <!-- upload from device files -->
+    <section id="files-area" class="col-lg-6 my-auto d-none border">
+        <form id="upload-files-form" action="{% url 'create_pdf' %}" method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <label for="file-input" class="file-label">Select files to upload:</label><br>
+            <input type="file" id="file-input" name="files" multiple accept="image/*"><br>
+            <input type="submit" value="Upload" class="submit-btn">
+        </form>
+    </section>
+
+    <!-- upload from camera -->
+    <section id="camera-area" class="col-lg-6 my-auto d-none">
+        <form id="upload-camera-form" action="{% url 'create_pdf' %}" method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <input type="file" id="camera-input" name="files" accept="image/*" capture="environment" multiple>
+            <input type="submit" value="Upload" class="submit-btn">
+        </form>
+    </section>
+    </div>
+
+
+<script src="static/pdftool/scripts.js"></script>
+</main>
+
+
+
+
+
+
+
+<!-- <main id="main-area" class="container">
+
+<section id="logo-area" class="col-lg-6 mx-auto">
+</section>
+
+<section id="upload-area" class="col-lg-6 mx-auto">
+<div id="upload-camera">
+</div>
+
+
+<div id="upload-files">
+<form method="POST">
+    <label for="input-upload">Select files:</label><br>
+    <input type="file" id="input-upload" name="files" multiple><br><br>
+    <input type="submit" value="Upload">
+</form>
+</div>
+
+</section>
+
+{% if message %}
+<h1>{{ message }}</h1>
+{% endif %}
+
+</main> -->
+
+{% endblock %}
