@@ -1,5 +1,5 @@
 .main-bg { 
-    background-color: #fff6ef; 
+    background-color: #fbf6f3; 
     color: #262628;
     font-family: 'Segoe UI', sans-serif;
 }
@@ -14,13 +14,13 @@
     min-width: 300px;
     display: block;
     margin: 20px auto;
-    padding: 10px 2px;
-    background-color: #c6c3f2;
+    padding: 10px 2px; 
+    background-color: #d4d2fc;
     border: 2px solid #8e85d1;
     border-radius: 8px;
 }
 .choose-btn:hover {
-    background-color: #b4abf4;
+    background-color: #c6c3f2;
     border-color: #8b80de;
 }
 
@@ -28,12 +28,12 @@
     margin: 5px 0px;
     width: 20%;
     padding: 5px;
-    background-color: #c6c3f2;
+    background-color: #d4d2fc;
     border: 2px solid #8e85d1;
     border-radius: 4px;
 }
 .submit-btn:hover {
-    background-color: #b4abf4;
+    background-color: #cbc8f4;
     border-color: #8b80de;
 }
 
@@ -61,10 +61,8 @@ input[type="file"]::file-selector-button:hover {
     border-color: #8b80de;
 }
 
-.error-msg {
-    background-color: #d86060;
-    color: #fff6ef;
-    padding: 10px;
-    border: 1px solid #b14e4e;
-    border-radius: 8px;
+.close-btn {
+    background-color: #8e85d1;
+    border: none;
+    margin-left: 3px;
 }

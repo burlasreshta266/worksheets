@@ -1,17 +1,34 @@
 {% extends 'pdftool/layout.html' %}
-
 {% block body %}
+
 
 <!-- display error message if no files are uploaded -->
 {% if messages %}
   <div class="container m-3 mx-auto">
     {% for message in messages %}
-    <div class="error-msg">{{ message }}</div>
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+   {{ message }}
+  <button type="button" class="close-btn" data-bs-dismiss="alert" aria-label="Close" style="background-color: transparent;
+    border: none;">X</button>
+</div>
+
   </div>
     {% endfor %}
   </div>
 {% endif %}
 
+
+
+<!-- Download pdf -->
+ {% if pdf_exists %}
+<div class="text-center mt-4">
+  <a href="{% url 'download_pdf' %}" class="btn btn-success">⬇️ Download PDF</a>
+</div>
+{% endif %}
+
+
+
+<!-- main section -->
 <main class="container mt-3">
     <div class="row">
     <!-- logo header area -->
@@ -22,8 +39,8 @@
     <!-- choose upload method -->
     <section id="upload-area" class="col-lg-6 my-auto">
         <div class="container-fluid">
-        <button id="upload-camera-btn" class="choose-btn">Upload from Camera</button>
-        <button id="upload-files-btn" class="choose-btn">Select files</button>
+        <button id="upload-camera-btn" class="choose-btn">📸 Upload from Camera</button>
+        <button id="upload-files-btn" class="choose-btn">📂 Select from device</button>
         </div>
     </section>
 
