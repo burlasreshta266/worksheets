@@ -66,8 +66,8 @@ def create_pdf(request):
             pdf_path = temp_file.name
             temp_file.flush()
             request.session['pdf_path'] = pdf_path
-            messages.error(request, "Created pdf")
-            return redirect('index')                
+            request.session['viewed'] = False
+            return redirect('preview')                
 
         # If no files are selected
         else:
@@ -82,15 +82,33 @@ def download_pdf(request):
     pdf_path = request.session.get('pdf_path')
     if not pdf_path or not os.path.exists(pdf_path):
         raise Http404("No PDF available for download.")
-
-    # Serve the file
     response = FileResponse(open(pdf_path, 'rb'), as_attachment=True, filename='converted.pdf')
-
-    # Cleanup: delete file and remove from session
-    try:
-        os.remove(pdf_path)
-    except Exception:
-        pass
-    request.session.pop('pdf_path', None)
-
     return response
+
+
+def preview(request):
+    pdf_path = request.session.get('pdf_path')
+    if not pdf_path or not os.path.exists(pdf_path):
+        messages.error(request, "⚠️ No PDF available to preview.")
+        return redirect('index')
+    
+    # id pdf has already been viewed, delete it
+    if request.session.get('viewed', False) == True:
+        try:
+            os.remove(pdf_path)
+        except Exception:
+            pass
+        request.session.pop('pdf_path', None)
+        request.session.pop('viewed', None)
+        messages.info(request, "ℹ️ PDF has been removed after viewing. Upload again")
+        return redirect('index')
+    
+    # not viewed yet, set viewed to true
+    request.session['viewed'] = True
+    return render(request, 'pdftool/view_pdf.html',)
+
+def view_pdf(request):
+    pdf_path = request.session.get('pdf_path')
+    if not pdf_path or not os.path.exists(pdf_path):
+        raise Http404("No PDF available for viewing.")
+    return FileResponse(open(pdf_path, 'rb'), content_type='application/pdf')

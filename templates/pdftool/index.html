@@ -1,103 +1,56 @@
 {% extends 'pdftool/layout.html' %}
+{% load static %}
 {% block body %}
 
 
-<!-- display error message if no files are uploaded -->
 {% if messages %}
-  <div class="container m-3 mx-auto">
+  <div class="container mt-3">
     {% for message in messages %}
     <div class="alert alert-danger alert-dismissible fade show" role="alert">
-   {{ message }}
-  <button type="button" class="close-btn" data-bs-dismiss="alert" aria-label="Close" style="background-color: transparent;
-    border: none;">X</button>
-</div>
-
-  </div>
+      {{ message }}
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">⨉</button>
+    </div>
     {% endfor %}
   </div>
 {% endif %}
 
 
 
-<!-- Download pdf -->
- {% if pdf_exists %}
-<div class="text-center mt-4">
-  <a href="{% url 'download_pdf' %}" class="btn btn-success">⬇️ Download PDF</a>
-</div>
-{% endif %}
-
-
-
-<!-- main section -->
 <main class="container mt-3">
     <div class="row">
-    <!-- logo header area -->
     <section id="logo-area" class="col-lg-6">
-        <img id="pdf-logo" src="static/pdftool/pdf-logo.png" alt="Pdf logo" class="img-fluid mx-auto d-block">
+        <img id="pdf-logo" src="{% static 'pdftool/pdf-logo.png' %}" alt="Pdf logo" class="img-fluid mx-auto d-block">
     </section>
 
-    <!-- choose upload method -->
-    <section id="upload-area" class="col-lg-6 my-auto">
-        <div class="container-fluid">
-        <button id="upload-camera-btn" class="choose-btn">📸 Upload from Camera</button>
-        <button id="upload-files-btn" class="choose-btn">📂 Select from device</button>
+    <section id="interactive-area" class="col-lg-6 my-auto">
+        
+        <div id="upload-choice-area" class="container-fluid">
+            <button id="upload-camera-btn" class="choose-btn">📸 Upload from Camera</button>
+            <button id="upload-files-btn" class="choose-btn">📂 Select from device</button>
         </div>
-    </section>
 
-    <!-- upload from device files -->
-    <section id="files-area" class="col-lg-6 my-auto d-none border">
-        <form id="upload-files-form" action="{% url 'create_pdf' %}" method="POST" enctype="multipart/form-data">
-            {% csrf_token %}
-            <label for="file-input" class="file-label">Select files to upload:</label><br>
-            <input type="file" id="file-input" name="files" multiple accept="image/*"><br>
-            <input type="submit" value="Upload" class="submit-btn">
-        </form>
-    </section>
+        <section id="files-area" class="d-none sec-bg p-3 rounded">
+            <form id="upload-files-form" action="{% url 'create_pdf' %}" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <label for="file-input" class="file-label">Select files to upload:</label><br>
+                <input type="file" id="file-input" name="files" multiple accept="image/*"><br>
+                <input type="submit" value="Upload" class="submit-btn">
+            </form>
+        </section>
 
-    <!-- upload from camera -->
-    <section id="camera-area" class="col-lg-6 my-auto d-none">
-        <form id="upload-camera-form" action="{% url 'create_pdf' %}" method="POST" enctype="multipart/form-data">
-            {% csrf_token %}
-            <input type="file" id="camera-input" name="files" accept="image/*" capture="environment" multiple>
-            <input type="submit" value="Upload" class="submit-btn">
-        </form>
+        <section id="camera-area" class="d-none border p-3 rounded">
+            <form id="upload-camera-form" action="{% url 'create_pdf' %}" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <label for="camera-input" class="file-label">Use camera to take photos:</label><br>
+                <input type="file" id="camera-input" name="files" accept="image/*" capture="environment" multiple>
+                <input type="submit" value="Upload" class="submit-btn">
+            </form>
+        </section>
+    
     </section>
     </div>
-
-
-<script src="static/pdftool/scripts.js"></script>
 </main>
 
-
-
-
-
-
-
-<!-- <main id="main-area" class="container">
-
-<section id="logo-area" class="col-lg-6 mx-auto">
-</section>
-
-<section id="upload-area" class="col-lg-6 mx-auto">
-<div id="upload-camera">
-</div>
-
-
-<div id="upload-files">
-<form method="POST">
-    <label for="input-upload">Select files:</label><br>
-    <input type="file" id="input-upload" name="files" multiple><br><br>
-    <input type="submit" value="Upload">
-</form>
-</div>
-
-</section>
-
-{% if message %}
-<h1>{{ message }}</h1>
-{% endif %}
-
-</main> -->
+<script src="{% static 'pdftool/scripts.js' %}"></script>
 
 {% endblock %}

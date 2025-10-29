@@ -1,0 +1,39 @@
+
+{% extends 'pdftool/layout.html' %}
+{% load static %}
+{% block body %}
+
+<main class="container mt-3 main-bg">
+    <h3 class="text-center mt-3 mb-4">Your PDF has been created!</h3>
+    <div class="row mt-2">
+    
+    <!-- edit and download buttons -->
+    <section id="buttons-area" class="col-lg-6">
+        <div class="text-center mb-4">
+            <a href="{% url 'download_pdf' %}" class="view-btn">⬇️ Download</a>
+            <a href="" class="view-btn">✏️ Edit</a>
+        </div>
+    </section>
+
+
+    <!-- view pdf -->
+    <section id="pdf-view-area" class="col-lg-6">
+        <div class="embed-responsive embed-responsive-16by9 mb-4">
+            <embed src="{% url 'view_pdf' %}" type="application/pdf" width="90%" height="600px" />
+        </div>
+    </section>
+
+    </div>
+
+    <script>
+    window.addEventListener('beforeunload', function (e) {
+        var confirmationMessage = 'Reloading will end your preview session and delete the file. Are you sure you want to continue?';
+        e.returnValue = confirmationMessage;
+        return confirmationMessage;        
+    });
+</script>
+
+</main>
+
+
+{% endblock %}

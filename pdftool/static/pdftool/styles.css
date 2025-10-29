@@ -1,0 +1,101 @@
+.main-bg { 
+    background-color: #fff7f5; 
+    color: #262628;
+    font-family: 'Segoe UI', sans-serif;
+}
+.sec-bg {
+    background-color: #fefbfb;
+    color: #262628;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+#files-area {
+    padding: 5px 10px;
+    border: 2px solid #ecdddd;
+}
+
+#pdf-logo {
+    width: 50vw;
+    max-width: 380px;
+}
+
+
+.btn-close {
+    color: #77232b;
+    background-color: transparent;
+    border: none;
+}
+
+
+.view-btn {
+    width: 100%;
+    max-width: 330px; 
+    display: inline-block;
+    color: #262628;
+    font-weight: 550;
+    margin: 10px;
+    padding: 10px 2px; 
+    background-color: #cbc9f6;
+    border: 2px solid #8e85d1;
+    border-radius: 8px;
+}
+.view-btn:hover {
+    background-color: #b8b5e9;
+    text-decoration: none;
+    color: #262628;
+}
+
+
+.choose-btn {
+    width: 100%;
+    max-width: 330px; 
+    display: block;
+    margin: 20px auto;
+    padding: 10px 2px; 
+    background-color: #cbc9f6;
+    border: 2px solid #8e85d1;
+    border-radius: 8px;
+}
+.choose-btn:hover {
+    background-color: #b4b0e9;
+    border-color: #8b80de;
+}
+
+
+.submit-btn {
+    margin: 15px 0px 5px 0px; /* Added some top margin */
+    width: auto;
+    padding: 8px 20px;
+    background-color: #cbc9f6;
+    border: 2px solid #8e85d1;
+    border-radius: 4px;
+}
+.submit-btn:hover {
+    background-color: #b4b0e9;
+    border-color: #8b80de;
+}
+
+
+.file-label {
+    margin: 5px 0px;
+    font-size: larger;
+    cursor: pointer;
+}
+input[type="file"] {
+    margin: 5px 0px;
+    cursor: pointer;
+}
+input[type="file"]::file-selector-button {
+    margin: 5px 0px;
+    margin-right: 15px;
+    width: auto;
+    padding: 5px 15px;
+    background-color: #cbc9f6;
+    border: 2px solid #8e85d1;
+    border-radius: 4px;
+    cursor: pointer;
+}
+input[type="file"]::file-selector-button:hover {
+    background-color: #b4b0e9;
+    border-color: #8b80de;
+}
