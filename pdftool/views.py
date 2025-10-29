@@ -5,8 +5,12 @@ import os, io
 from django.http import FileResponse, Http404
 from PIL import Image
 
-MAX_PDF_SIZE = 1 * 1024 * 1024
-A4_SIZE = (1240, 1754)
+MAX_PDF_SIZE = 1 * 1024 * 1024  # 1 MB
+DPI = 150
+A4_WIDTH_IN = 8.27  # A4 width in inches
+A4_HEIGHT_IN = 11.69  # A4 height in inches
+A4_SIZE = (int(A4_WIDTH_IN * DPI), int(A4_HEIGHT_IN * DPI))  # (~1240x1754 at 150 DPI)
+A4_SIZE_RATIO = (int(A4_WIDTH_IN * DPI)/int(A4_HEIGHT_IN * DPI))
 
 def index(request):
     pdf_path = request.session.get('pdf_path')
@@ -28,10 +32,34 @@ def create_pdf(request):
                     data = list(img.getdata())
                     img_clean = Image.new(img.mode, img.size)
                     img_clean.putdata(data)
+                    
+                    # Calculate current image aspect ratio
+                    img_ratio = img_clean.width / img_clean.height
+                    
+                    if img_ratio > A4_SIZE_RATIO:
+                        # Image is wider than A4
+                        new_width = int(img_clean.height * A4_SIZE_RATIO)
+                        new_height = img_clean.height
+                        left = (img_clean.width - new_width) // 2
+                        top = 0
+                        right = left + new_width
+                        bottom = new_height
+                    else:
+                        # Image is taller than A4
+                        new_width = img_clean.width
+                        new_height = int(img_clean.width / A4_SIZE_RATIO)
+                        left = 0
+                        top = (img_clean.height - new_height) // 2
+                        right = new_width
+                        bottom = top + new_height
 
-                    # Resize to A4 resolution (~150 DPI)
-                    img_clean = img_clean.resize(A4_SIZE)
-                    images.append(img_clean)
+                    # Crop the image to A4 proportions
+                    img_cropped = img_clean.crop((left, top, right, bottom))
+                    
+                    # Resize the cropped image to exact A4 dimensions
+                    img_resized = img_cropped.resize(A4_SIZE, Image.Resampling.LANCZOS)
+                    
+                    images.append(img_resized)
 
                 except Exception:
                     messages.error(request, "⚠️ Error processing images. Please try again.")
