@@ -11,7 +11,7 @@
     <section id="buttons-area" class="col-lg-6">
         <div class="text-center mb-4">
             <a href="{% url 'download_pdf' %}" id="download-btn" class="view-btn">⬇️ Download</a>
-            <a href="" class="view-btn">✏️ Edit</a>
+            <a href="{% url 'edit_pdf' %}" class="view-btn">✏️ Edit</a>
         </div>
     </section>
 
@@ -24,22 +24,6 @@
     </section>
 
     </div>
-
-    <script>
-    const handleUnloadWarning = function (e) {
-            var confirmationMessage = 'Reloading will end your preview session and delete the file. Are you sure you want to continue?';
-            e.returnValue = confirmationMessage;
-            return confirmationMessage;        
-        };
-    
-        window.addEventListener('beforeunload', handleUnloadWarning);
-    
-        const downloadButton = document.getElementById('download-btn');
-        
-        downloadButton.addEventListener('click', function() {
-            window.removeEventListener('beforeunload', handleUnloadWarning);
-        });
-</script>
 
 </main>
 

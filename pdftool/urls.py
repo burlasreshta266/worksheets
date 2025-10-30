@@ -7,4 +7,5 @@ urlpatterns = [
     path('download_pdf/', views.download_pdf, name='download_pdf'),
     path('preview/', views.preview, name='preview'),
     path('view_pdf/', views.view_pdf, name='view_pdf'),
+    path('edit_pdf/', views.edit_pdf, name='edit_pdf'),
 ]
