@@ -1,0 +1,52 @@
+{% extends 'pdftool/layout.html' %}
+{% load static %}
+{% block body %}
+
+<main class="container-fluid mt-3 main-bg">
+    <div class="row g-3">
+
+        <!-- PDF Preview (Large Screens) / Full Width (Small Screens) -->
+        <section id="edit-pdf-preview-area" class="col-lg-6 d-flex flex-column align-items-center">
+            <div class="pdf-preview-embed-container" style="width: 95%; height: 70vh; max-height: 800px; border: 1px solid #ccc;">
+                <embed src="{{ pdf_url }}" type="application/pdf" width="100%" height="100%" />
+            </div>
+        </section>
+
+        <!-- Edit Controls -->
+        <section id="edit-controls-area" class="col-lg-6 p-3">
+            <div class="d-flex justify-content-center align-items-center mb-4">
+                <input type="text" value="{{ pdf_title }}" class="form-control text-center pdf-title-input" disabled>
+                <button class="btn btn-sm edit-title-btn">✏️</button>
+            </div>
+
+            <!-- Filters -->
+            <div class="card mb-4 edit-card">
+                <div class="card-body">
+                    <h5 class="card-title">Filters</h5>
+                    <div class="d-flex flex-wrap gap-2 justify-content-between">
+                        <button class="btn edit-filter-btn active">No filter</button>
+                        <button class="btn edit-filter-btn">Greyscale</button>
+                        <button class="btn edit-filter-btn">Light text</button>
+                        <button class="btn edit-filter-btn">Defined</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action buttons -->
+            <div class="d-flex gap-3 justify-content-between mb-4">
+                <button class="btn edit-action-btn">✂️ Crop</button>
+                <button class="btn edit-action-btn">➕ Add pages</button>
+                <button class="btn edit-action-btn">❌ Delete pages</button>
+            </div>
+
+            <!-- done, delete -->
+            <div class="d-flex justify-content-center p-3">
+                <button class="btn btn-danger edit-bottom-btn">🚫 Delete pdf</button>
+                <button class="btn btn-success edit-bottom-btn">✅ Done</button>
+            </div>
+        </section>
+
+    </div>
+</main>
+
+{% endblock %}

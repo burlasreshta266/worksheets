@@ -38,6 +38,7 @@
     background-color: #cbc9f6;
     border: 2px solid #8e85d1;
     border-radius: 8px;
+    text-decoration: none;
 }
 .view-btn:hover {
     background-color: #b8b5e9;
@@ -98,4 +99,120 @@ input[type="file"]::file-selector-button {
 input[type="file"]::file-selector-button:hover {
     background-color: #b4b0e9;
     border-color: #8b80de;
+}
+
+/* Edit Pdf page styles */
+.pdf-title-input {
+    max-width: 250px;
+    border: 1px solid #ecdddd;
+    background-color: #fefbfb;
+    color: #262628;
+    cursor: pointer;
+    margin: 5px 10px;
+    font-weight: 500;
+}
+
+.pdf-title-input:disabled {
+    border: 1px solid #ecdddd;
+    background-color: #fefbfb;
+    color: #262628;
+}
+
+.edit-title-btn {
+    background-color: #cbc9f6;
+    border: 1px solid #8e85d1;
+    color: #262628;
+    padding: .375rem .75rem;
+}
+.edit-title-btn:hover {
+    background-color: #b4b0e9;
+    border-color: #8b80de;
+}
+
+.edit-card {
+    border: 1px solid #ecdddd;
+    background-color: #fefbfb;
+    color: #262628;
+    border-radius: 6px;
+}
+
+.edit-card .card-title {
+    font-size: 1.05em;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+.edit-filter-btn {
+    background-color: #cbc9f6;
+    border: 1px solid #8e85d1;
+    border-radius: 4px;
+    margin: 5px 5px;
+    color: #262628;
+    padding: 8px 15px;
+    flex-grow: 1; 
+    max-width: 110px; 
+}
+.edit-filter-btn:hover {
+    background-color: #b4b0e9;
+    border-color: #8b80de;
+}
+.edit-filter-btn.active {
+    background-color: #8e85d1;
+    color: white;
+    font-weight: bold;
+}
+
+.edit-action-btn {
+    background-color: #cbc9f6;
+    border: 1px solid #8e85d1;
+    border-radius: 4px;
+    color: #262628;
+    padding: 12px 20px;
+    margin: 5px 5px;
+    font-weight: 500;
+    width: 30%;
+    max-width: 250px;
+    min-width: 140px;
+}
+.edit-action-btn:hover {
+    background-color: #b4b0e9;
+    border-color: #8b80de;
+}
+
+.edit-bottom-btn {
+    width: 30%;
+    min-width: 195px;
+    padding: 10px 25px;
+    margin: 0px 6%;
+    font-weight: 500;
+}
+.edit-bottom-btn.btn-danger {
+    background-color: #dc3545; 
+    border-color: #dc3545;
+}
+.edit-bottom-btn.btn-danger:hover {
+    background-color: #c82333;
+    border-color: #bd2130;
+}
+.edit-bottom-btn.btn-success {
+    background-color: #28a745; 
+    border-color: #28a745;
+}
+.edit-bottom-btn.btn-success:hover {
+    background-color: #218838;
+    border-color: #1e7e34;
+}
+
+
+@media (max-width: 991.98px) { /* For small screens (Bootstrap's lg breakpoint) */
+    #edit-pdf-preview-area {
+        text-align: center;
+        margin-top: 20px;
+    }
+    .pdf-preview-embed-container {
+        height: 50vh; /* Adjust height for smaller screens */
+    }
+    .edit-filter-btn {
+        max-width: none; /* Allow filter buttons to fill width */
+    }
 }

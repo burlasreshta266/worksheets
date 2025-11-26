@@ -174,3 +174,17 @@ def download_pdf(request):
     response.close = cleanup
 
     return response
+
+
+def edit(request):
+    pdf_path = request.session.get("pdf_path")
+    pdf_name = request.session.get("pdf_name", "converted.pdf")
+
+    if not pdf_path or not os.path.exists(pdf_path):
+        messages.error(request, "⚠️ No PDF available to edit.")
+        return redirect("index")
+
+    return render(request, "pdftool/edit.html", {
+        "pdf_url": "/view_pdf/",   # embed uses this
+        "pdf_title": pdf_name,     # shows current name
+    })
