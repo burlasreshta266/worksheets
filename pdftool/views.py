@@ -1,5 +1,4 @@
 from django.shortcuts import render, redirect
-from django.urls import reverse
 from django.contrib import messages
 import tempfile
 import os, io
@@ -106,7 +105,7 @@ def create_pdf(request):
         return redirect('index')
 
 
-# Download PDF button
+
 def download_pdf(request):
     pdf_path = request.session.get('pdf_path')
     if not pdf_path or not os.path.exists(pdf_path):
@@ -115,7 +114,6 @@ def download_pdf(request):
     return response
 
 
-# Preview PDF page after it is done
 def preview(request):
     pdf_path = request.session.get('pdf_path')
     if not pdf_path or not os.path.exists(pdf_path):
@@ -142,17 +140,3 @@ def view_pdf(request):
     if not pdf_path or not os.path.exists(pdf_path):
         raise Http404("No PDF available for viewing.")
     return FileResponse(open(pdf_path, 'rb'), content_type='application/pdf')
-
-
-# Edit pdf
-def edit_pdf(request):
-    pdf_path = request.session.get('pdf_path')
-    if not pdf_path or not os.path.exists(pdf_path):
-        messages.error(request, "⚠️ No PDF available to edit.")
-        return redirect('index')
-    
-    context = {
-        'pdf_title' : 'Created-pdf.pdf',
-        'pdf_url' : reverse('view_pdf'),
-    }
-    return render(request, 'pdftool/edit_pdf.html', context)
