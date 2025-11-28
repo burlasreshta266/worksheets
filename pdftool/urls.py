@@ -8,4 +8,6 @@ urlpatterns = [
     path('preview/', views.preview, name='preview'),
     path('view_pdf/', views.view_pdf, name='view_pdf'),
     path('edit/', views.edit, name='edit'),
+    path('edit_pdf_name/', views.edit_pdf_name, name='edit_pdf_name'),
+    path('delete_pdf/', views.delete_pdf, name='delete_pdf'),
 ]

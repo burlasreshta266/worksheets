@@ -188,3 +188,33 @@ def edit(request):
         "pdf_url": "/view_pdf/",   # embed uses this
         "pdf_title": pdf_name,     # shows current name
     })
+
+
+# Change the pdf title
+def edit_pdf_name(request):
+    if request.method != "POST":
+        return redirect("edit")
+
+    new_name = request.POST.get("pdf_name", "").strip()
+    if not new_name:
+        messages.error(request, "⚠️ PDF name cannot be empty.")
+        return redirect("edit")
+
+    if not new_name.lower().endswith(".pdf"):
+        new_name += ".pdf"
+
+    request.session["pdf_name"] = new_name
+    messages.success(request, "✅ PDF name updated.")
+    return redirect("edit")
+
+
+# Delete the current pdf
+def delete_pdf(request):
+    if request.method != "POST":
+        return redirect("edit")
+
+    # Remove the PDF and session info
+    delete_pdf_from_session(request)
+
+    messages.success(request, "🗑️ PDF deleted successfully.")
+    return redirect("index")
