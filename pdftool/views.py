@@ -109,12 +109,20 @@ def create_pdf(request):
         return redirect("index")
 
     images = []
+    image_paths = []
     for f in files:
         img = process_image(f)
         if not img:
             messages.error(request, "⚠️ Error processing images.")
             return redirect("index")
         images.append(img)
+        # Save processed image to temp file
+        temp = tempfile.NamedTemporaryFile(delete=False, suffix=".jpg")
+        img.save(temp.name, "JPEG", quality=90)
+        image_paths.append(temp.name)
+
+    # store image list in session
+    request.session["image_paths"] = image_paths
 
     pdf_buffer = compress_pdf(images)
     pdf_path = save_temp_pdf(pdf_buffer)
@@ -124,6 +132,22 @@ def create_pdf(request):
     request.session["pdf_name"] = "converted.pdf"
 
     return redirect("preview")
+
+
+def generate_thumbnails(image_paths):
+    thumbnails = []
+
+    for idx, p in enumerate(image_paths, start=1):
+        thumb_path = tempfile.NamedTemporaryFile(delete=False, suffix=".jpg").name
+
+        img = Image.open(p)
+        img.thumbnail((200, 300))
+        img.save(thumb_path, "JPEG")
+
+        thumbnails.append((idx, thumb_path))
+
+    return thumbnails
+
 
 
 def preview(request):
@@ -179,15 +203,22 @@ def download_pdf(request):
 def edit(request):
     pdf_path = request.session.get("pdf_path")
     pdf_name = request.session.get("pdf_name", "converted.pdf")
+    image_paths = request.session.get("image_paths", [])
 
     if not pdf_path or not os.path.exists(pdf_path):
         messages.error(request, "⚠️ No PDF available to edit.")
         return redirect("index")
 
+    thumbnails = generate_thumbnails(image_paths)
+
+    request.session["thumbnail_paths"] = [t[1] for t in thumbnails]
+
     return render(request, "pdftool/edit.html", {
-        "pdf_url": "/view_pdf/",   # embed uses this
-        "pdf_title": pdf_name,     # shows current name
+        "pdf_url": "/view_pdf/",
+        "pdf_title": pdf_name,
+        "thumbnails": thumbnails,
     })
+
 
 
 # Change the pdf title
@@ -218,3 +249,37 @@ def delete_pdf(request):
 
     messages.success(request, "🗑️ PDF deleted successfully.")
     return redirect("index")
+
+
+def delete_pages(request, pages):
+    image_paths = request.session.get("image_paths", [])
+
+    if not image_paths:
+        messages.error(request, "⚠️ No pages available.")
+        return redirect("edit")
+
+    try:
+        page_nums = [int(p) for p in pages.split('-')]
+    except:
+        messages.error(request, "⚠️ Invalid page numbers.")
+        return redirect("edit")
+
+    # keep only pages NOT deleted
+    remaining = [p for i, p in enumerate(image_paths, start=1) if i not in page_nums]
+
+    if not remaining:
+        delete_pdf_from_session(request)
+        messages.warning(request, "⚠️ All pages deleted.")
+        return redirect("index")
+
+    # rebuild PDF from remaining images
+    imgs = [Image.open(path).convert("RGB") for path in remaining]
+    pdf_buffer = compress_pdf(imgs)
+    new_pdf_path = save_temp_pdf(pdf_buffer)
+
+    # update session
+    request.session["pdf_path"] = new_pdf_path
+    request.session["image_paths"] = remaining
+
+    messages.success(request, f"🗑 Deleted pages: {', '.join(map(str, page_nums))}")
+    return redirect("edit")

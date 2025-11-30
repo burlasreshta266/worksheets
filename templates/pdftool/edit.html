@@ -16,7 +16,7 @@
 
                 {{ message }}
 
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">⨉</button>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
         {% endfor %}
         </div>
@@ -41,8 +41,8 @@
                 <form action="{% url 'edit_pdf_name' %}" method="POST" class="d-flex align-items-center">
                 {% csrf_token %}
                     <input type="text" value="{{ pdf_title }}" name="pdf_name" id="titleInput" class="form-control text-center pdf-title-input" disabled>
-                    <button id="editTitleBtn" type="button" class="btn btn-sm edit-title-btn">✏️</button>
-                    <button id="saveTitleBtn" type="submit" class="btn btn-sm edit-title-btn d-none">✔️</button>
+                    <button id="editTitleBtn" type="button" class="btn btn-sm btn-thin">✏️</button>
+                    <button id="saveTitleBtn" type="submit" class="btn btn-sm btn-thin d-none">✔️</button>
                 </form>
             </div>
 
@@ -51,35 +51,98 @@
             <div class="card mb-4 edit-card">
                 <div class="card-body">
                     <h5 class="card-title">Filters</h5>
-                    <div class="d-flex flex-wrap gap-2 justify-content-between">
-                        <button class="btn edit-filter-btn active">No filter</button>
-                        <button class="btn edit-filter-btn">Greyscale</button>
-                        <button class="btn edit-filter-btn">Light text</button>
-                        <button class="btn edit-filter-btn">Defined</button>
+                    <div class="d-flex flex-wrap justify-content-md-center">
+                        <button class="btn btn-small btn-thin m-2 active">🚫</button>
+                        <button class="btn btn-thin m-2">Greyscale</button>
+                        <button class="btn btn-thin m-2">Light text</button>
+                        <button class="btn btn-thin m-2">Defined</button>
                     </div>
                 </div>
             </div>
 
+
+            <!-- Page Thumbnails -->
+<div id="thumbnail-section" style="display: none;">
+    <div class="card mb-4 edit-card">
+        <div class="card-body">
+            <h5 class="card-title">Pages</h5>
+
+            <form id="multiDeleteForm" method="POST">
+                {% csrf_token %}
+
+                <div class="row">
+                    {% for page_number, img_path in thumbnails %}
+                    <div class="col-4 text-center mb-4">
+                        <label for="page-{{ page_number }}" style="cursor: pointer; width: 100%; display:block;">
+                            <div class="thumbnail-wrapper"
+                                style="border: 1px solid #ccc; border-radius: 4px; padding: 6px;">
+                                <img src="file://{{ img_path }}"
+                                    class="img-thumbnail"
+                                    style="height: 150px; object-fit: contain; width: 100%; background: #fafafa;">
+                            </div>
+                            <div class="mt-2">
+                                <input type="checkbox"
+                                    name="pages"
+                                    value="{{ page_number }}"
+                                    id="page-{{ page_number }}"
+                                    style="cursor: pointer;">
+                                Page {{ page_number }}
+                            </div>
+                        </label>
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <button type="button"
+                    id="confirmDeletePages"
+                    class="btn btn-danger w-100 mt-3">
+                    ❌ Confirm Delete Selected Pages
+                </button>
+
+            </form>
+        </div>
+    </div>
+</div>
+
             <!-- Action buttons -->
-            <div class="d-flex gap-3 justify-content-between mb-4">
-                <button class="btn edit-action-btn">✂️ Crop</button>
-                <button class="btn edit-action-btn">➕ Add pages</button>
-                <button class="btn edit-action-btn">❌ Delete pages</button>
+            <div class="d-flex gap-4 justify-content-between m-1">
+                <div class="row">
+                    <div class="col-6 mb-3 text-center">
+                        <button class="btn btn-thin w-75">✂️ Crop</button>
+                    </div>
+
+                    <div class="col-6 mb-3 text-center">
+                        <button class="btn btn-thin w-75">➕ Add pages</button>
+                    </div>
+
+                    <div class="col-6 mb-3 text-center">
+                        <button class="btn btn-thin w-75 ">🔄️ Reorder pages</button>
+                    </div>
+
+                    <div class="col-6 mb-3 text-center">
+                        <button id="showDeleteUI" class="btn btn-thin w-75">❌ Delete pages</button>
+                    </div>
+               </div>
             </div>
 
             
-            <div class="d-flex justify-content-center p-3">
+            <div class="container-flex p-3">
+                <div class="row">
+                    <div class="col-6 text-center">
+                        <!-- delete -->
+                        <form action="{% url 'delete_pdf' %}" method="POST" id="deletePdfForm">
+                            {% csrf_token %}
+                            <button type="submit" id="deletePdfBtn" class="btn btn-danger btn-block">
+                                🚫 Delete pdf
+                            </button>
+                        </form>
+                    </div>
 
-                <!-- delete -->
-                <form action="{% url 'delete_pdf' %}" method="POST" id="deletePdfForm">
-                    {% csrf_token %}
-                    <button type="submit" id="deletePdfBtn" class="btn btn-danger edit-bottom-btn">
-                        🚫 Delete pdf
-                    </button>
-                </form>
-                
-                <!-- done / download -->
-                <a href="{% url 'download_pdf' %}" id="download-btn" class="btn btn-success edit-bottom-btn">✅ Done</a>
+                    <div class="col-6 text-center">
+                        <!-- done / download -->
+                        <a href="{% url 'download_pdf' %}" id="download-btn" class="btn btn-success btn-block">✅ Done</a>
+                    </div>          
+                </div>
             </div>
         </section>
 
@@ -92,6 +155,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const saveTitleBtn = document.getElementById('saveTitleBtn');
     const titleInput = document.getElementById('titleInput');
 
+    // EDIT title
     editTitleBtn.addEventListener('click', function(event) {
         event.preventDefault();
         titleInput.disabled = false;
@@ -100,7 +164,7 @@ document.addEventListener('DOMContentLoaded', function() {
         saveTitleBtn.classList.remove("d-none");
     });
 
-    // DELETE confirmation
+    // DELETE pdf confirmation
     const deleteForm = document.getElementById('deletePdfForm');
     const deleteBtn  = document.getElementById('deletePdfBtn');
 
@@ -112,6 +176,50 @@ document.addEventListener('DOMContentLoaded', function() {
         if (confirmed) {
             deleteForm.submit();
         }
+    });
+
+    // Delete selected pages confirmation
+/* SHOW THUMBNAILS WHEN DELETE-PAGES CLICKED */
+    const showDeleteUI = document.getElementById("showDeleteUI");
+    const thumbnailSection = document.getElementById("thumbnail-section");
+
+    showDeleteUI.addEventListener("click", function () {
+        thumbnailSection.style.display = "block";
+
+        // Scroll thumbnails into view
+        thumbnailSection.scrollIntoView({ behavior: 'smooth' });
+    });
+
+    /* PURPLE SELECTION BORDER */
+    document.querySelectorAll("input[name='pages']").forEach(cb => {
+        cb.addEventListener("change", function () {
+            const wrapper = cb.closest("label").querySelector(".thumbnail-wrapper");
+
+            if (cb.checked) {
+                wrapper.classList.add("selected");
+            } else {
+                wrapper.classList.remove("selected");
+            }
+        });
+    });
+
+    /* DELETE SELECTED PAGES */
+    const deleteSelectedBtn = document.getElementById("confirmDeletePages");
+    const form = document.getElementById("multiDeleteForm");
+
+    deleteSelectedBtn.addEventListener("click", function () {
+        const selected = [...document.querySelectorAll("input[name='pages']:checked")]
+            .map(cb => cb.value);
+
+        if (!selected.length) {
+            alert("Please select at least one page.");
+            return;
+        }
+
+        if (!confirm("Delete pages: " + selected.join(", ") + "?")) return;
+
+        form.action = "/delete_pages/" + selected.join("-") + "/";
+        form.submit();
     });
 });
 </script>

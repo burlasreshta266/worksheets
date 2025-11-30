@@ -19,87 +19,34 @@
     max-width: 380px;
 }
 
+.btn-main {
+    background-color: #cbc9f6 !important;
+    border: 2px solid #8e85d1 !important;
+}
+.btn-main:hover,
+.btn-main:focus,
+.btn-main:active {
+    background-color: #b8b5e9 !important;
+    border-color: #7e76bc !important;
+}
+
+.btn-thin {
+    background-color: #cbc9f6 !important;
+    border: 1px solid #8e85d1 !important;
+}
+.btn-thin:hover,
+.btn-thin:focus,
+.btn-thin:active {
+    background-color: #b8b5e9 !important;
+    border-color: #7e76bc !important;
+}
 
 .btn-close {
-    color: #77232b;
-    background-color: transparent;
-    border: none;
-}
+    background-color: transparent !important;
+    border: none !important;
+    color: #2f2f32 !important;
+    font-size: 0.8em;}
 
-
-.view-btn {
-    width: 100%;
-    max-width: 330px; 
-    display: inline-block;
-    color: #262628;
-    font-weight: 550;
-    margin: 10px;
-    padding: 10px 2px; 
-    background-color: #cbc9f6;
-    border: 2px solid #8e85d1;
-    border-radius: 8px;
-    text-decoration: none;
-}
-.view-btn:hover {
-    background-color: #b8b5e9;
-    text-decoration: none;
-    color: #262628;
-}
-
-
-.choose-btn {
-    width: 100%;
-    max-width: 330px; 
-    display: block;
-    margin: 20px auto;
-    padding: 10px 2px; 
-    background-color: #cbc9f6;
-    border: 2px solid #8e85d1;
-    border-radius: 8px;
-}
-.choose-btn:hover {
-    background-color: #b4b0e9;
-    border-color: #8b80de;
-}
-
-
-.submit-btn {
-    margin: 15px 0px 5px 0px; /* Added some top margin */
-    width: auto;
-    padding: 8px 20px;
-    background-color: #cbc9f6;
-    border: 2px solid #8e85d1;
-    border-radius: 4px;
-}
-.submit-btn:hover {
-    background-color: #b4b0e9;
-    border-color: #8b80de;
-}
-
-
-.file-label {
-    margin: 5px 0px;
-    font-size: larger;
-    cursor: pointer;
-}
-input[type="file"] {
-    margin: 5px 0px;
-    cursor: pointer;
-}
-input[type="file"]::file-selector-button {
-    margin: 5px 0px;
-    margin-right: 15px;
-    width: auto;
-    padding: 5px 15px;
-    background-color: #cbc9f6;
-    border: 2px solid #8e85d1;
-    border-radius: 4px;
-    cursor: pointer;
-}
-input[type="file"]::file-selector-button:hover {
-    background-color: #b4b0e9;
-    border-color: #8b80de;
-}
 
 /* Edit Pdf page styles */
 .pdf-title-input {
@@ -113,20 +60,9 @@ input[type="file"]::file-selector-button:hover {
 }
 
 .pdf-title-input:disabled {
-    border: 1px solid #ecdddd;
-    background-color: #fefbfb;
+    border: 1px solid #bebebe;
+    background-color: #ffffff;
     color: #262628;
-}
-
-.edit-title-btn {
-    background-color: #cbc9f6;
-    border: 1px solid #8e85d1;
-    color: #262628;
-    padding: .375rem .75rem;
-}
-.edit-title-btn:hover {
-    background-color: #b4b0e9;
-    border-color: #8b80de;
 }
 
 .edit-card {
@@ -142,67 +78,6 @@ input[type="file"]::file-selector-button:hover {
     margin-bottom: 15px;
 }
 
-.edit-filter-btn {
-    background-color: #cbc9f6;
-    border: 1px solid #8e85d1;
-    border-radius: 4px;
-    margin: 5px 5px;
-    color: #262628;
-    padding: 8px 15px;
-    flex-grow: 1; 
-    max-width: 110px; 
-}
-.edit-filter-btn:hover {
-    background-color: #b4b0e9;
-    border-color: #8b80de;
-}
-.edit-filter-btn.active {
-    background-color: #8e85d1;
-    color: white;
-    font-weight: bold;
-}
-
-.edit-action-btn {
-    background-color: #cbc9f6;
-    border: 1px solid #8e85d1;
-    border-radius: 4px;
-    color: #262628;
-    padding: 12px 20px;
-    margin: 5px 5px;
-    font-weight: 500;
-    width: 30%;
-    max-width: 250px;
-    min-width: 140px;
-}
-.edit-action-btn:hover {
-    background-color: #b4b0e9;
-    border-color: #8b80de;
-}
-
-.edit-bottom-btn {
-    width: 30%;
-    min-width: 195px;
-    padding: 10px 25px;
-    margin: 0px 6%;
-    font-weight: 500;
-}
-.edit-bottom-btn.btn-danger {
-    background-color: #dc3545; 
-    border-color: #dc3545;
-}
-.edit-bottom-btn.btn-danger:hover {
-    background-color: #c82333;
-    border-color: #bd2130;
-}
-.edit-bottom-btn.btn-success {
-    background-color: #28a745; 
-    border-color: #28a745;
-}
-.edit-bottom-btn.btn-success:hover {
-    background-color: #218838;
-    border-color: #1e7e34;
-}
-
 
 @media (max-width: 991.98px) { /* For small screens (Bootstrap's lg breakpoint) */
     #edit-pdf-preview-area {
@@ -215,4 +90,10 @@ input[type="file"]::file-selector-button:hover {
     .edit-filter-btn {
         max-width: none; /* Allow filter buttons to fill width */
     }
+}
+
+.thumbnail-wrapper.selected {
+    border: 3px solid #8e85d1 !important;
+    box-shadow: 0 0 8px rgba(142, 133, 209, 0.6);
+    transition: 0.2s ease-in-out;
 }

@@ -30,17 +30,19 @@
 
     <section id="interactive-area" class="col-lg-6 my-auto">
         
-        <div id="upload-choice-area" class="container-fluid">
-            <button id="upload-camera-btn" class="choose-btn">📸 Upload from Camera</button>
-            <button id="upload-files-btn" class="choose-btn">📂 Select from device</button>
+        <div id="upload-choice-area" class="container-fluid text-center">
+            <button id="upload-camera-btn" class="btn btn-main w-75 m-3">📸 Upload from Camera</button> <br>
+            <button id="upload-files-btn" class="btn btn-main w-75 m-3">📂 Select from device</button>
         </div>
 
-        <section id="files-area" class="d-none sec-bg p-3 rounded">
+        <section id="files-area" class="d-none sec-bg p-4 rounded m-2">
             <form id="upload-files-form" action="{% url 'create_pdf' %}" method="POST" enctype="multipart/form-data">
                 {% csrf_token %}
-                <label for="file-input" class="file-label">Select files to upload:</label><br>
-                <input type="file" id="file-input" name="files" multiple accept="image/*"><br>
-                <input type="submit" value="Upload" class="submit-btn">
+                <div class="custom-file text-center">
+                    <input type="file" class="custom-file-input mb-3" id="customFile" name='files' multiple accept="image/*">
+                    <label class="custom-file-label" for="customFile">Select files to upload</label>
+                    <br><input type="submit" value="Upload" class="btn btn-main w-50 mx-auto">
+                </div>
             </form>
         </section>
 

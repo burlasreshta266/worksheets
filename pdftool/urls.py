@@ -10,4 +10,5 @@ urlpatterns = [
     path('edit/', views.edit, name='edit'),
     path('edit_pdf_name/', views.edit_pdf_name, name='edit_pdf_name'),
     path('delete_pdf/', views.delete_pdf, name='delete_pdf'),
+    path('delete_pages/<str:pages>/', views.delete_pages, name='delete_pages'),
 ]
