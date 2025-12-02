@@ -283,3 +283,43 @@ def delete_pages(request, pages):
 
     messages.success(request, f"🗑 Deleted pages: {', '.join(map(str, page_nums))}")
     return redirect("edit")
+
+
+def reorder_pages(request):
+    if request.method != "POST":
+        return redirect("edit")
+
+    order = request.POST.get("order")
+    if not order:
+        messages.error(request, "⚠️ No reorder data received.")
+        return redirect("edit")
+
+    try:
+        new_order = [int(x) for x in order.split(",")]
+    except:
+        messages.error(request, "⚠️ Invalid reorder format.")
+        return redirect("edit")
+
+    image_paths = request.session.get("image_paths", [])
+    if not image_paths:
+        messages.error(request, "⚠️ No images found.")
+        return redirect("edit")
+
+    if len(new_order) != len(image_paths):
+        messages.error(request, "⚠️ Reorder length mismatch.")
+        return redirect("edit")
+
+    # Convert order to index positions (1-based → list index)
+    new_paths = [image_paths[i - 1] for i in new_order]
+
+    # Rebuild PDF from new order
+    imgs = [Image.open(p).convert("RGB") for p in new_paths]
+    pdf_buffer = compress_pdf(imgs)
+    new_pdf_path = save_temp_pdf(pdf_buffer)
+
+    # Save reorder in session
+    request.session["image_paths"] = new_paths
+    request.session["pdf_path"] = new_pdf_path
+
+    messages.success(request, "🔄 Pages reordered successfully.")
+    return redirect("edit")

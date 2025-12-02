@@ -1,3 +1,6 @@
+/* ------------------------------
+   GENERAL PAGE STYLES
+------------------------------ */
 .main-bg { 
     background-color: #fff7f5; 
     color: #262628;
@@ -19,6 +22,9 @@
     max-width: 380px;
 }
 
+/* ------------------------------
+   BUTTON THEMES
+------------------------------ */
 .btn-main {
     background-color: #cbc9f6 !important;
     border: 2px solid #8e85d1 !important;
@@ -28,6 +34,12 @@
 .btn-main:active {
     background-color: #b8b5e9 !important;
     border-color: #7e76bc !important;
+}
+
+.btn-outline-main {
+    background-color: transparent !important;
+    border: 2px solid #8e85d1 !important;
+    color: #8e85d1 !important;
 }
 
 .btn-thin {
@@ -41,14 +53,22 @@
     border-color: #7e76bc !important;
 }
 
+.btn-outline-thin {
+    background-color: transparent !important;
+    border: 1px solid #494471 !important;
+    color: #494471 !important;
+}
+
 .btn-close {
     background-color: transparent !important;
     border: none !important;
     color: #2f2f32 !important;
-    font-size: 0.8em;}
+    font-size: 0.8em;
+}
 
-
-/* Edit Pdf page styles */
+/* ------------------------------
+   EDIT PDF PAGE
+------------------------------ */
 .pdf-title-input {
     max-width: 250px;
     border: 1px solid #ecdddd;
@@ -78,22 +98,102 @@
     margin-bottom: 15px;
 }
 
-
-@media (max-width: 991.98px) { /* For small screens (Bootstrap's lg breakpoint) */
+@media (max-width: 991.98px) {
     #edit-pdf-preview-area {
         text-align: center;
         margin-top: 20px;
     }
     .pdf-preview-embed-container {
-        height: 50vh; /* Adjust height for smaller screens */
-    }
-    .edit-filter-btn {
-        max-width: none; /* Allow filter buttons to fill width */
+        height: 50vh;
     }
 }
 
+/* ------------------------------
+   THUMBNAILS 
+------------------------------ */
+
+/* Purple selected state */
 .thumbnail-wrapper.selected {
     border: 3px solid #8e85d1 !important;
-    box-shadow: 0 0 8px rgba(142, 133, 209, 0.6);
-    transition: 0.2s ease-in-out;
+    box-shadow: 0 0 8px rgba(142,133,209,0.5);
+    transition: .2s ease-in-out;
+}
+
+.draggable-item {
+    transition: transform .18s ease, opacity .18s ease;
+}
+.draggable-item.dragging {
+    transform: scale(1.03);
+    opacity: .8;
+    z-index: 9999;
+    position: relative;
+}
+
+.thumbnail-wrapper {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 3 / 4;       /* change to 4/3, 16/9 etc to taste */
+    overflow: hidden;
+    background: #fafafa;
+    border-radius: 4px;
+}
+
+.thumbnail-wrapper img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+}
+
+.thumb-img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+}
+
+.delete-mode .drag-handle {
+    display: none !important;
+    pointer-events: none !important;
+}
+
+/* Mobile grid fix: 2 thumbnails per row */
+@media (max-width: 576px) {
+    #thumbnailGrid .draggable-item {
+        flex: 0 0 50% !important;
+        max-width: 50% !important;
+    }
+}
+
+/* ------------------------------
+   DRAG HANDLE 
+------------------------------ */
+.drag-handle {
+    position: absolute;
+    top: 4px;
+    left: 4px;
+    font-size: 22px;
+    cursor: grab;
+    opacity: 0.7;
+    z-index: 50;
+    user-select: none;
+    line-height: 1;
+}
+.drag-handle:active {
+    cursor: grabbing;
+    opacity: 1;
+}
+
+.drag-handle {
+    touch-action: none !important;
+}
+
+/* ------------------------------
+   SWIPE LOCK FOR REORDER MODE
+------------------------------ */
+#thumbnailGrid.no-swipe {
+    overflow-x: visible !important;
+    -webkit-overflow-scrolling: auto !important;
 }

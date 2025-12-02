@@ -4,7 +4,7 @@
 
 <main class="container-fluid mt-3 main-bg">
 
-    <!-- error messages -->
+<!-- Error messages -->
    {% if messages %}
         <div class="container mt-3">
         {% for message in messages %}
@@ -22,35 +22,34 @@
         </div>
     {% endif %}
 
+
     <div class="row g-3">
 
-        <!-- PDF Preview (Large Screens) / Full Width (Small Screens) -->
-        <section id="edit-pdf-preview-area" class="col-lg-6 d-flex flex-column align-items-center">
-            <div class="pdf-preview-embed-container" style="width: 95%; height: 70vh; max-height: 800px; border: 1px solid #ccc;">
+        <!-- PDF Preview -->
+        <section class="col-lg-6 d-flex flex-column align-items-center">
+            <div style="width:95%; height:70vh; border:1px solid #ccc;">
                 <embed src="{{ pdf_url }}" type="application/pdf" width="100%" height="100%" />
             </div>
         </section>
 
+        <!-- Controls -->
+        <section class="col-lg-6 p-3">
 
-
-        <!-- Edit Controls -->
-        <section id="edit-controls-area" class="col-lg-6 p-3">
-
-            <!-- PDF Title -->
+            <!-- Title -->
             <div class="d-flex justify-content-center align-items-center mb-4">
                 <form action="{% url 'edit_pdf_name' %}" method="POST" class="d-flex align-items-center">
-                {% csrf_token %}
-                    <input type="text" value="{{ pdf_title }}" name="pdf_name" id="titleInput" class="form-control text-center pdf-title-input" disabled>
+                    {% csrf_token %}
+                    <input type="text" value="{{ pdf_title }}" name="pdf_name" id="titleInput"
+                           class="form-control text-center pdf-title-input" disabled>
                     <button id="editTitleBtn" type="button" class="btn btn-sm btn-thin">✏️</button>
                     <button id="saveTitleBtn" type="submit" class="btn btn-sm btn-thin d-none">✔️</button>
                 </form>
             </div>
 
-
             <!-- Filters -->
-            <div class="card mb-4 edit-card">
+            <div class="card mb-4">
                 <div class="card-body">
-                    <h5 class="card-title">Filters</h5>
+                    <h5>Filters</h5>
                     <div class="d-flex flex-wrap justify-content-md-center">
                         <button class="btn btn-small btn-thin m-2 active">🚫</button>
                         <button class="btn btn-thin m-2">Greyscale</button>
@@ -60,170 +59,105 @@
                 </div>
             </div>
 
-
-            <!-- Page Thumbnails -->
-<div id="thumbnail-section" style="display: none;">
-    <div class="card mb-4 edit-card">
-        <div class="card-body">
-            <h5 class="card-title">Pages</h5>
-
-            <form id="multiDeleteForm" method="POST">
-                {% csrf_token %}
-
-                <div class="row">
-                    {% for page_number, img_path in thumbnails %}
-                    <div class="col-4 text-center mb-4">
-                        <label for="page-{{ page_number }}" style="cursor: pointer; width: 100%; display:block;">
-                            <div class="thumbnail-wrapper"
-                                style="border: 1px solid #ccc; border-radius: 4px; padding: 6px;">
-                                <img src="file://{{ img_path }}"
-                                    class="img-thumbnail"
-                                    style="height: 150px; object-fit: contain; width: 100%; background: #fafafa;">
-                            </div>
-                            <div class="mt-2">
-                                <input type="checkbox"
-                                    name="pages"
-                                    value="{{ page_number }}"
-                                    id="page-{{ page_number }}"
-                                    style="cursor: pointer;">
-                                Page {{ page_number }}
-                            </div>
-                        </label>
-                    </div>
-                    {% endfor %}
+            <!-- Action Buttons -->
+            <div class="row text-center mb-3">
+                <div class="col-6">
+                    <button class="btn btn-thin w-75">✂️ Crop</button>
                 </div>
-
-                <button type="button"
-                    id="confirmDeletePages"
-                    class="btn btn-danger w-100 mt-3">
-                    ❌ Confirm Delete Selected Pages
-                </button>
-
-            </form>
-        </div>
-    </div>
-</div>
-
-            <!-- Action buttons -->
-            <div class="d-flex gap-4 justify-content-between m-1">
-                <div class="row">
-                    <div class="col-6 mb-3 text-center">
-                        <button class="btn btn-thin w-75">✂️ Crop</button>
-                    </div>
-
-                    <div class="col-6 mb-3 text-center">
-                        <button class="btn btn-thin w-75">➕ Add pages</button>
-                    </div>
-
-                    <div class="col-6 mb-3 text-center">
-                        <button class="btn btn-thin w-75 ">🔄️ Reorder pages</button>
-                    </div>
-
-                    <div class="col-6 mb-3 text-center">
-                        <button id="showDeleteUI" class="btn btn-thin w-75">❌ Delete pages</button>
-                    </div>
-               </div>
-            </div>
-
-            
-            <div class="container-flex p-3">
-                <div class="row">
-                    <div class="col-6 text-center">
-                        <!-- delete -->
-                        <form action="{% url 'delete_pdf' %}" method="POST" id="deletePdfForm">
-                            {% csrf_token %}
-                            <button type="submit" id="deletePdfBtn" class="btn btn-danger btn-block">
-                                🚫 Delete pdf
-                            </button>
-                        </form>
-                    </div>
-
-                    <div class="col-6 text-center">
-                        <!-- done / download -->
-                        <a href="{% url 'download_pdf' %}" id="download-btn" class="btn btn-success btn-block">✅ Done</a>
-                    </div>          
+                <div class="col-6">
+                    <button class="btn btn-thin w-75">➕ Add pages</button>
+                </div>
+                <div class="col-6 mt-3">
+                    <button id="openReorder" class="btn btn-thin w-75">🔄 Reorder</button>
+                </div>
+                <div class="col-6 mt-3">
+                    <button id="openDelete" class="btn btn-thin w-75">❌ Delete pages</button>
                 </div>
             </div>
+
+            <!-- Unified Thumbnail Panel -->
+            <div id="thumbnailPanel" class="card mb-4" style="display:none;">
+                <div class="card-body">
+
+                    <h5 class="mb-3" id="panelTitle">Pages</h5>
+
+                    <!-- Thumbnails -->
+                    <div id="thumbnailGrid" class="row">
+                        {% for page_number, img_path in thumbnails %}
+                        <div class="col-6 col-md-4 text-center mb-4 draggable-item" 
+                             draggable="true"
+                             data-page="{{ page_number }}">
+                            
+                            <div class="thumb-container" style="width:100%;">
+                                <div class="thumbnail-wrapper" style="border:1px solid #ccc; border-radius:4px; padding:6px;">
+                                    <!-- DRAG HANDLE -->
+                                    <div class="drag-handle"
+                                        style="
+                                        position:absolute;
+                                        top:4px;
+                                        left:4px;
+                                        font-size:20px;
+                                        cursor:grab;
+                                        z-index:50;
+                                        user-select:none;
+                                     ">
+                                        <span class="main-bg p-1 border">☰</span>
+                                    </div>
+                                    <img src="file://{{ img_path }}" 
+                                         class="img-thumbnail thumb-img">
+                                </div>
+
+                                <!-- Delete checkbox (only shown in delete mode) -->
+                                <div class="mt-2 delete-checkbox d-none">
+                                    <input type="checkbox" value="{{ page_number }}" class="delete-page-checkbox">
+                                    <span>Page {{ page_number }}</span>
+                                </div>
+                            </div>
+
+                        </div>
+                        {% endfor %}
+                    </div>
+
+                    <!-- Reorder controls -->
+                    <div id="reorderControls" style="display:none;">
+                        <button id="saveOrderBtn" class="btn btn-primary w-100">💾 Save order</button>
+                    </div>
+
+                    <!-- Delete controls -->
+                    <div id="deleteControls" style="display:none;">
+                        <button id="deleteSelectedBtn" class="btn btn-danger w-100">❌ Delete selected</button>
+                    </div>
+
+                    <!-- Hidden forms -->
+                    <form id="reorderForm" method="POST" action="{% url 'reorder_pages' %}" class="d-none">
+                        {% csrf_token %}
+                        <input type="hidden" name="order" id="orderInput">
+                    </form>
+
+                    <form id="deleteForm" method="POST" class="d-none">
+                        {% csrf_token %}
+                    </form>
+
+                </div>
+            </div>
+
+            <!-- Bottom buttons -->
+            <div class="row text-center p-2">
+                <div class="col-6">
+                    <form action="{% url 'delete_pdf' %}" method="POST" id="deletePdfForm">
+                        {% csrf_token %}
+                        <button class="btn btn-danger w-75">Delete PDF</button>
+                    </form>
+                </div>
+                <div class="col-6">
+                    <a href="{% url 'download_pdf' %}" class="btn btn-success w-75">Done</a>
+                </div>
+            </div>
+
         </section>
-
     </div>
 
 
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    const editTitleBtn = document.getElementById('editTitleBtn');
-    const saveTitleBtn = document.getElementById('saveTitleBtn');
-    const titleInput = document.getElementById('titleInput');
-
-    // EDIT title
-    editTitleBtn.addEventListener('click', function(event) {
-        event.preventDefault();
-        titleInput.disabled = false;
-        titleInput.focus();
-        editTitleBtn.classList.add("d-none");
-        saveTitleBtn.classList.remove("d-none");
-    });
-
-    // DELETE pdf confirmation
-    const deleteForm = document.getElementById('deletePdfForm');
-    const deleteBtn  = document.getElementById('deletePdfBtn');
-
-    deleteBtn.addEventListener('click', function(event) {
-        event.preventDefault();  // prevent auto-submit
-
-        const confirmed = confirm("Are you sure you want to delete this PDF? This action cannot be undone.");
-
-        if (confirmed) {
-            deleteForm.submit();
-        }
-    });
-
-    // Delete selected pages confirmation
-/* SHOW THUMBNAILS WHEN DELETE-PAGES CLICKED */
-    const showDeleteUI = document.getElementById("showDeleteUI");
-    const thumbnailSection = document.getElementById("thumbnail-section");
-
-    showDeleteUI.addEventListener("click", function () {
-        thumbnailSection.style.display = "block";
-
-        // Scroll thumbnails into view
-        thumbnailSection.scrollIntoView({ behavior: 'smooth' });
-    });
-
-    /* PURPLE SELECTION BORDER */
-    document.querySelectorAll("input[name='pages']").forEach(cb => {
-        cb.addEventListener("change", function () {
-            const wrapper = cb.closest("label").querySelector(".thumbnail-wrapper");
-
-            if (cb.checked) {
-                wrapper.classList.add("selected");
-            } else {
-                wrapper.classList.remove("selected");
-            }
-        });
-    });
-
-    /* DELETE SELECTED PAGES */
-    const deleteSelectedBtn = document.getElementById("confirmDeletePages");
-    const form = document.getElementById("multiDeleteForm");
-
-    deleteSelectedBtn.addEventListener("click", function () {
-        const selected = [...document.querySelectorAll("input[name='pages']:checked")]
-            .map(cb => cb.value);
-
-        if (!selected.length) {
-            alert("Please select at least one page.");
-            return;
-        }
-
-        if (!confirm("Delete pages: " + selected.join(", ") + "?")) return;
-
-        form.action = "/delete_pages/" + selected.join("-") + "/";
-        form.submit();
-    });
-});
-</script>
-
-
+<script src="{% static 'pdftool/edit_scripts.js' %}"></script>
 </main>
 {% endblock %}
