@@ -305,9 +305,26 @@ function PdfPage() {
               onChange={(event) => setTitle(event.target.value)}
             />
           </div>
-          <Button variant="success" size="sm" className="fw-bold">
-            Download
-          </Button>
+
+          <div className="d-flex justify-content-between">
+
+            <Form.Select
+                data-bs-theme="dark"
+            >
+                <option value="0">Defalut</option>
+                <option value="1">1 MB</option>
+                <option value="2">2 MB</option>
+                <option value="3">3 MB</option>
+                <option value="5">5 MB</option>
+                <option value="10">10 MB</option>
+                <option value="50">50 MB</option>
+                <option value="100">100 MB</option>
+            </Form.Select>
+
+            <Button variant="success" size="sm" className="fw-bold ms-3">
+                Download
+            </Button>
+          </div>
         </Container>
 
         <Container fluid>
