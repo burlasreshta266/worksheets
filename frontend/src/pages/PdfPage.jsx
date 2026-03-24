@@ -7,69 +7,16 @@ import ActionModal from "../components/ActionModal.jsx";
 import ReorderGrid from "../components/ReorderGrid.jsx";
 import { createA4PaddedImage } from "../utils/a4Image.js";
 import { processImage } from "../utils/processImage.js";
-
-const DEFAULT_FILTER = "none";
-const MIN_ZOOM = 50;
-const MAX_ZOOM = 200;
-const ZOOM_STEP = 10;
-
-function getValidImageFiles(files) {
-  return Array.isArray(files) ? files.filter((file) => file instanceof File) : [];
-}
-
-function createImageId(file) {
-  if (typeof crypto?.randomUUID === "function") {
-    return crypto.randomUUID();
-  }
-
-  return `${file.name}-${file.lastModified}-${Math.random().toString(36).slice(2, 10)}`;
-}
-
-function createImageModel(file) {
-  return {
-    id: createImageId(file),
-    originalFile: file,
-    previewUrl: "",
-    transformations: {
-      crop: null,
-      filter: DEFAULT_FILTER,
-    },
-  };
-}
-
-function createImageModels(files) {
-  return getValidImageFiles(files).map(createImageModel);
-}
-
-function createPreviewItems(images) {
-  return images
-    .filter((image) => typeof image.previewUrl === "string" && image.previewUrl.length > 0)
-    .map((image) => ({
-      id: image.id,
-      key: image.id,
-      src: image.previewUrl,
-    }));
-}
-
-function getImagesProcessingKey(images) {
-  return images
-    .map((image) => {
-      const { crop, filter } = image.transformations;
-      const cropKey = crop
-        ? `${crop.x}:${crop.y}:${crop.width}:${crop.height}`
-        : "none";
-
-      return [
-        image.id,
-        image.originalFile.name,
-        image.originalFile.lastModified,
-        image.originalFile.size,
-        cropKey,
-        filter,
-      ].join(":");
-    })
-    .join("|");
-}
+import {
+  DEFAULT_FILTER,
+  MIN_ZOOM,
+  MAX_ZOOM,
+  ZOOM_STEP,
+  getValidImageFiles,
+  createImageModels,
+  createPreviewItems,
+  getImagesProcessingKey,
+} from "../utils/pdfPageUtils.js";
 
 function PdfPage() {
   const location = useLocation();
@@ -340,9 +287,16 @@ function PdfPage() {
   }, [isA4Enabled, previewImages]);
 
   return (
-    <Container className="border ps-3 pe-3 mt-3 mb-3">
+    <Container className="ps-3 pe-3 mt-3 mb-3">
+
+        {alertConfig.message && (
+          <Alert variant={alertConfig.variant} dismissible onClose={clearAlert} className="mb-3">
+            {alertConfig.message}
+          </Alert>
+        )}
+
       <Stack gap={3}>
-        <Container fluid className="border d-flex justify-content-between">
+        <Container fluid className="d-flex justify-content-between">
           <div>
             <input
               type="text"
@@ -356,7 +310,7 @@ function PdfPage() {
           </Button>
         </Container>
 
-        <Container fluid className="border">
+        <Container fluid>
           <Row className="g-3">
             <Col xs={6} className="ps-3 pe-3">
               <Button className="w-100" variant="primary" onClick={handleAddPagesClick}>
@@ -372,7 +326,7 @@ function PdfPage() {
           </Row>
         </Container>
 
-        <Container fluid className="border p-3 pdf-preview-shell">
+        <Container fluid className="p-3 pdf-preview-shell">
           <div className="pdf-preview-toolbar">
             <Stack direction="horizontal" gap={4}>
               <div className="pdf-preview-toolbar-controls">
@@ -456,11 +410,6 @@ function PdfPage() {
           )}
         </Container>
 
-        {alertConfig.message && (
-          <Alert variant={alertConfig.variant} dismissible onClose={clearAlert} className="mb-0">
-            {alertConfig.message}
-          </Alert>
-        )}
 
         <ActionModal
           show={activeModal === "reorder"}
