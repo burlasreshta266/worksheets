@@ -42,4 +42,41 @@ coverage/
 *.pid
 *.seed
 
-/backend
+# Maven
+target/
+!.mvn/wrapper/maven-wrapper.jar
+
+# IntelliJ IDEA
+.idea/
+*.iml
+
+# VS Code
+.vscode/
+
+# Logs
+*.log
+logs/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Build / temp files
+*.class
+*.jar
+*.war
+*.ear
+
+# Spring Boot
+application-local.properties
+application-dev.properties
+
+# Environment files
+.env
+
+# Maven Wrapper (keep scripts, ignore jar if needed)
+.mvn/wrapper/maven-wrapper.jar
+
+# Misc
+*.tmp
+*.swp
