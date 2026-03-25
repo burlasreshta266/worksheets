@@ -6,7 +6,7 @@ function getOutputType(fileType) {
   return supportedTypes.has(fileType) ? fileType : "image/png";
 }
 
-export async function processImage(image) {
+async function renderProcessedImage(image) {
   if (!image?.originalFile) {
     throw new Error("A source image is required.");
   }
@@ -33,6 +33,14 @@ export async function processImage(image) {
   context.drawImage(croppedSource, 0, 0, width, height);
   context.filter = "none";
 
-  const blob = await canvasToBlob(canvas, getOutputType(image.originalFile.type));
+  return canvasToBlob(canvas, getOutputType(image.originalFile.type));
+}
+
+export async function processImageToBlob(image) {
+  return renderProcessedImage(image);
+}
+
+export async function processImage(image) {
+  const blob = await renderProcessedImage(image);
   return URL.createObjectURL(blob);
 }

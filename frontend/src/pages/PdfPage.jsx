@@ -1,4 +1,4 @@
-import { Alert, Button, Container, Stack, Row, Col, Form } from "react-bootstrap";
+import { Alert, Button, Container, Stack, Row, Col, Form, Spinner } from "react-bootstrap";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Crop, Trash3Fill } from "react-bootstrap-icons";
@@ -6,7 +6,7 @@ import CropModal from "../components/CropModal.jsx";
 import ActionModal from "../components/ActionModal.jsx";
 import ReorderGrid from "../components/ReorderGrid.jsx";
 import { createA4PaddedImage } from "../utils/a4Image.js";
-import { processImage } from "../utils/processImage.js";
+import { processImage, processImageToBlob } from "../utils/processImage.js";
 import {
   DEFAULT_FILTER,
   MIN_ZOOM,
@@ -32,6 +32,8 @@ function PdfPage() {
   const [activeModal, setActiveModal] = useState(null);
   const [cropTargetId, setCropTargetId] = useState(null);
   const [isA4Enabled, setIsA4Enabled] = useState(false);
+  const [compression, setCompression] = useState("0");
+  const [isDownloading, setIsDownloading] = useState(false);
 
   const previewImages = useMemo(() => createPreviewItems(images), [images]);
   const cropTargetImage = useMemo(
@@ -46,6 +48,84 @@ function PdfPage() {
 
   const clearAlert = () => {
     setAlertConfig({ variant: "", message: "" });
+  };
+
+  const getDownloadTitle = () => {
+    const trimmedTitle = title.trim();
+    return trimmedTitle.length > 0 ? trimmedTitle : "generated_pdf";
+  };
+
+  const createProcessedImageFile = async (image, index) => {
+    const processedBlob = await processImageToBlob(image);
+    const originalName = image.originalFile?.name ?? `page-${index + 1}.png`;
+    const baseName = originalName.includes(".")
+      ? originalName.slice(0, originalName.lastIndexOf("."))
+      : originalName;
+    const extension = processedBlob.type.split("/")[1] ?? "png";
+
+    return new File([processedBlob], `${baseName}-processed.${extension}`, {
+      type: processedBlob.type,
+      lastModified: Date.now(),
+    });
+  };
+
+  const createPdfFormData = async () => {
+    const processedFiles = await Promise.all(
+      images.map((image, index) => createProcessedImageFile(image, index)),
+    );
+    const formData = new FormData();
+
+    processedFiles.forEach((file) => {
+      formData.append("files", file);
+    });
+
+    formData.append("compression", compression);
+    formData.append("title", getDownloadTitle());
+
+    return formData;
+  };
+
+  const downloadPdfBlob = (pdfBlob) => {
+    const downloadTitle = getDownloadTitle();
+    const downloadUrl = URL.createObjectURL(pdfBlob);
+    const link = document.createElement("a");
+
+    link.href = downloadUrl;
+    link.download = `${downloadTitle}.pdf`;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    URL.revokeObjectURL(downloadUrl);
+  };
+
+  const handleDownload = async () => {
+    if (images.length === 0 || isDownloading) {
+      return;
+    }
+
+    clearAlert();
+    setIsDownloading(true);
+
+    try {
+      const formData = await createPdfFormData();
+      const response = await fetch("http://localhost:8080/generate-pdf", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to generate PDF.");
+      }
+
+      const pdfBlob = await response.blob();
+      downloadPdfBlob(pdfBlob);
+      showAlert("success", "PDF downloaded successfully.");
+    } catch {
+      showAlert("danger", "Failed to download the PDF. Please try again.");
+      alert("Failed to download the PDF. Please try again.");
+    } finally {
+      setIsDownloading(false);
+    }
   };
 
   const addImages = (newImages) => {
@@ -310,6 +390,9 @@ function PdfPage() {
 
             <Form.Select
                 data-bs-theme="dark"
+                value={compression}
+                onChange={(event) => setCompression(event.target.value)}
+                disabled={isDownloading}
             >
                 <option value="0">Defalut</option>
                 <option value="1">1 MB</option>
@@ -321,8 +404,18 @@ function PdfPage() {
                 <option value="100">100 MB</option>
             </Form.Select>
 
-            <Button variant="success" size="sm" className="fw-bold ms-3">
-                Download
+            <Button
+              variant="success"
+              size="sm"
+              className="fw-bold ms-3"
+              onClick={handleDownload}
+              disabled={isDownloading || images.length === 0}
+            >
+              {isDownloading ? (
+                <Spinner animation="border" size="sm" role="status" aria-label="Downloading PDF" />
+              ) : (
+                "Download"
+              )}
             </Button>
           </div>
         </Container>
