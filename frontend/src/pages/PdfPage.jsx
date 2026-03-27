@@ -81,6 +81,7 @@ function PdfPage() {
 
     formData.append("compression", compression);
     formData.append("title", getDownloadTitle());
+    formData.append("isA4", String(isA4Enabled));
 
     return formData;
   };
